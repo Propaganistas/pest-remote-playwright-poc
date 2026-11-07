@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36db8f2bd6aaa9e8abd1931735bfe869",
+    "content-hash": "57889e0f69326e4e03dbd72ea1c75739",
     "packages": [
         {
             "name": "brick/math",
@@ -9079,16 +9079,16 @@
         },
         {
             "name": "pestphp/pest-plugin-browser",
-            "version": "v5.2.0",
+            "version": "dev-support-remote-ws",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pestphp/pest-plugin-browser.git",
-                "reference": "2b5c7b51bceba3a04a5ca1c5e3f0bb236f544357"
+                "url": "https://github.com/Propaganistas/pest-plugin-browser.git",
+                "reference": "74ce873910ea4c27ed0acc65f19e92785991ca02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest-plugin-browser/zipball/2b5c7b51bceba3a04a5ca1c5e3f0bb236f544357",
-                "reference": "2b5c7b51bceba3a04a5ca1c5e3f0bb236f544357",
+                "url": "https://api.github.com/repos/Propaganistas/pest-plugin-browser/zipball/74ce873910ea4c27ed0acc65f19e92785991ca02",
+                "reference": "74ce873910ea4c27ed0acc65f19e92785991ca02",
                 "shasum": ""
             },
             "require": {
@@ -9121,14 +9121,71 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "src/Autoload.php"
-                ],
                 "psr-4": {
                     "Pest\\Browser\\": "src/"
+                },
+                "files": [
+                    "src/Autoload.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/",
+                    "Workbench\\App\\": "workbench/app/",
+                    "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+                    "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "scripts": {
+                "bump:minor": [
+                    "composer update && composer bump"
+                ],
+                "lint": [
+                    "rector",
+                    "pint --parallel"
+                ],
+                "test:profanity": [
+                    "pest --profanity --compact --language=en"
+                ],
+                "test:type-coverage": [
+                    "pest --type-coverage --compact --exactly=100"
+                ],
+                "test:lint": [
+                    "rector --dry-run",
+                    "pint --parallel --test"
+                ],
+                "test:unit": [
+                    "pest --parallel"
+                ],
+                "test:types": [
+                    "phpstan"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:profanity",
+                    "@test:type-coverage",
+                    "@test:types",
+                    "@test:unit"
+                ],
+                "post-autoload-dump": [
+                    "@clear",
+                    "@prepare"
+                ],
+                "clear": [
+                    "@php vendor/bin/testbench package:purge-skeleton --ansi"
+                ],
+                "prepare": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "build": [
+                    "@php vendor/bin/testbench workbench:build --ansi"
+                ],
+                "serve": [
+                    "Composer\\Config::disableProcessTimeout",
+                    "@build",
+                    "@php vendor/bin/testbench serve --ansi"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -9143,23 +9200,23 @@
                 "unit"
             ],
             "support": {
-                "source": "https://github.com/pestphp/pest-plugin-browser/tree/v5.2.0"
+                "source": "https://github.com/Propaganistas/pest-plugin-browser/tree/support-remote-ws"
             },
             "funding": [
                 {
-                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=66BYDWAT92N6L",
-                    "type": "custom"
+                    "type": "github",
+                    "url": "https://github.com/nunomaduro"
                 },
                 {
-                    "url": "https://github.com/nunomaduro",
-                    "type": "github"
+                    "type": "patreon",
+                    "url": "https://www.patreon.com/nunomaduro"
                 },
                 {
-                    "url": "https://www.patreon.com/nunomaduro",
-                    "type": "patreon"
+                    "type": "custom",
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=66BYDWAT92N6L"
                 }
             ],
-            "time": "2026-10-29T06:29:23+00:00"
+            "time": "2026-11-07T21:00:49+00:00"
         },
         {
             "name": "pestphp/pest-plugin-laravel",
@@ -11632,7 +11689,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "pestphp/pest-plugin-browser": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
