@@ -3,7 +3,87 @@ name: Tests
 on: ['push', 'pull_request']
 
 jobs:
-  ci:
+  local:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          tools: composer:v2
+          coverage: none
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Tests
+        run: ./vendor/bin/pest --ci
+
+  remote-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          tools: composer:v2
+          coverage: none
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Spoof remote server
+        run: |
+          mkdir playwright
+          cd playwright
+          npm install playwright
+          npx playwright install --with-deps
+          npx -y playwright run-server --port 3000 --host 127.0.0.1 --mode launchServer
+
+      - name: Wait for Playwright server to be ready
+        run: npx wait-on --timeout 30000 http-get://127.0.0.1:3000/
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Tests
+        run: ./vendor/bin/pest --ci --ws ws://127.0.0.1:3000
+
+  container-service:
     runs-on: ubuntu-latest
 
     services:
