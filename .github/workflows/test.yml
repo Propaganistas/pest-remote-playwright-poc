@@ -8,7 +8,7 @@ jobs:
 
     services:
       playwright:
-        image: mcr.microsoft.com/playwright:v1.64.1-noble
+        image: mcr.microsoft.com/playwright:v1.65.0-noble
         command: npx -y playwright@1.65.0 run-server --port 3000 --host 0.0.0.0 --mode launchServer
         options: --add-host=host.docker.internal:host-gateway
         ports:
