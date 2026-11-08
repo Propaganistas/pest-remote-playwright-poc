@@ -70,7 +70,7 @@ jobs:
           cd playwright
           npm install playwright
           npx playwright install --with-deps
-          npx -y playwright run-server --port 3000 --host 127.0.0.1 --mode launchServer
+          npx -y playwright run-server --port 3000 --host 127.0.0.1 --mode launchServer &
 
       - name: Wait for Playwright server to be ready
         run: npx wait-on --timeout 30000 http-get://127.0.0.1:3000/
