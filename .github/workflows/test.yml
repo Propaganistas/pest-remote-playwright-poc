@@ -3,7 +3,7 @@ name: Tests
 on: ['push', 'pull_request']
 
 jobs:
-  local:
+  default:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +39,7 @@ jobs:
       - name: Tests
         run: ./vendor/bin/pest --ci
 
-  remote-server:
+  with-server:
     runs-on: ubuntu-latest
 
     steps:
@@ -64,7 +64,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Spoof remote server
+      - name: Run isolated Playwright server
         run: |
           mkdir playwright
           cd playwright
@@ -83,7 +83,7 @@ jobs:
       - name: Tests
         run: ./vendor/bin/pest --ci --ws ws://127.0.0.1:3000
 
-  container-service:
+  service-container:
     runs-on: ubuntu-latest
 
     services:
